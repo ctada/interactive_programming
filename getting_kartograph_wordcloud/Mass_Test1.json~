@@ -1,0 +1,5 @@
+{
+   "layers": [{
+       "src": "ne_50m_admin_1_state_provinces_lakes.shp"
+   }]
+}

@@ -45,3 +45,4 @@ def make_cloud():
 
 if __name__ == "__main__":
 	get_tweets()
+	make_cloud()

@@ -11,14 +11,14 @@ associated value:
 import csv
 import xml.etree.cElementTree as et
 from os.path import join
-from . import _data_dir
+# from . import _data_dir
 
-data_dir = _data_dir()
+# data_dir = _data_dir()
 
 nan = float('NaN')
 
 data = {}
-with open(join(data_dir, 'US_Counties.csv')) as f:
+with open('cbp12co.txt') as f: #join(data_dir, 'US_Counties.csv')) as f:
     next(f)
     reader = csv.reader(f, delimiter=',', quotechar='"')
     for row in reader:

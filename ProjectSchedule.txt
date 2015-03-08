@@ -1,13 +1,15 @@
 Thursday:
-	[] UML Diagram - Begin Classes
-	[] Country Graphs
-	[] Getting Information
+	[X] UML Diagram - Begin Classes
+	[NA] Country Graphs
+	[NA] Getting Information
 
 Friday: 
-	[] Continue information and graph development
-	[] Developing classes
+	[NA] Continue information and graph development
+	[~] Developing classes
 Saturday:
-	[] Begin interactive visualization
+	[X] Begin interactive visualization
+		Have GDP Data imported
+		Hover tool test functioning
 
 Sunday:
 	[] Develop interactive visualization

@@ -1,16 +1,22 @@
 Thursday:
-	[] UML Diagram - Begin Classes
-	[] Country Graphs
-	[] Getting Information
+	[X] UML Diagram - Begin Classes
+	[NA] Country Graphs
+	[NA] Getting Information
 
 Friday: 
-	[] Continue information and graph development
-	[] Developing classes
+	[NA] Continue information and graph development
+	[~] Developing classes
 Saturday:
-	[] Begin interactive visualization
+	[X] Begin interactive visualization
+		Have GDP Data imported
+		Hover tool test functioning
 
 Sunday:
-	[] Develop interactive visualization
+	[X] Develop interactive visualization
+		Integrated hover tool into program and functioning
+		Created Interactive_Visualization_Map.py to begin project direction showing stats corresponding with each state
+		US map test functioning
+		Integrated US map into main program
 
 Monday:
 	[] Polish

@@ -95,6 +95,7 @@ class Display_Map():
 		"""
 		colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
 		state_colors = ["#F1EEF6"] #NEEDS TO BE SET IN LATER CODE
+
 		TOOLS = "pan, wheel_zoom, box_zoom, reset, hover"
 
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html

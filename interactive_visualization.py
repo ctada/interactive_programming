@@ -60,8 +60,10 @@ class Display_Map():
 		"""
 		Maintains display/ interaction experience
 		"""
+		TOOLS = "pan, wheel_zoom, box_zoom, reset, hover"
+
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
-		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map") #creates new Bokeh plot
+		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
 		fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
 		#fig.circle(
          #xs, ys,
@@ -97,7 +99,12 @@ class Interactive():
 		"""
 		Initializes monitoring of user input
 		"""
-		pass
+		hover = fig.select(dict(type = HoverTool))
+		# hover.snap_to_data = False
+		hover.tooltips = [("(x,y)", "($x, $y)")]
+
+		show(fig)
+
 	def get_mouse_position(self):
 		"""
 		returns mouse position in relation to map image (translate from screen position)

@@ -9,6 +9,7 @@ import bokeh.plotting as bk
 import numpy as np
 from bokeh.models import HoverTool as hov
 import pandas as pd
+from bokeh.charts import Scatter
 
 class Display_Map():
 	"""
@@ -21,10 +22,16 @@ class Display_Map():
 		Initializes map image, borders, countries
 		"""
 		#for now, data is not related to geography
-		stats = pd.read_csv('data/juvie_breakdown.csv')
-		self.gender = stats['Sex'].Series.toList() #you can also use df['column_name']
-		print type(self.gender)
-		self.year = stats['Year'].Series.toList
+		stats = pd.read_csv('data/happiness_UScentric.csv')
+		print stats
+		#self.states = stats['What state or province do you live in, if applicable?']
+		#self.year = stats['Do you love and appreciate yourself?']
+		#self.safety = stats['Are your surroundings physically safe?']
+		df = stats[["Do you love and appreciate yourself?", "Are your surroundings physically safe?", "What state or province do you live in, if applicable?"]]
+		g = df.groupby('What state or province do you live in, if applicable?')
+
+		scatter = Scatter(g, filename="state_happiness.html", title="State Happiness GroupBy")
+		scatter.show()
 		#self.juvRate=[]
 		#for rate in stats['Rate per 100,000']:
 		#	if not np.isnan(rate):
@@ -45,8 +52,6 @@ class Display_Map():
 		Maintains display/ interaction experience
 		"""
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
-		xs = [0,1,2,3,4,5]
-		ys = [x**2 for x in xs]
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map") #creates new Bokeh plot
 		fig.circle(#self.gender, self.year,
          #size=(self.juvRate), # px

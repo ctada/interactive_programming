@@ -81,6 +81,7 @@ class Display_Map():
 
 		fig.xaxis.axis_label="Average Reported Happiness (1-5)"
 		fig.yaxis.axis_label="Average Sense of Safety (1-5)"
+
 		#fig.circle(
          #xs, ys,
          #size =2,
@@ -126,7 +127,6 @@ class Interactive():
 		
 		show(fig)
 		
-
 	def get_mouse_position(self):
 		"""
 		returns mouse position in relation to map image (translate from screen position)

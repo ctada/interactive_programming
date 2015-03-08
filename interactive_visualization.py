@@ -9,8 +9,7 @@ import bokeh.plotting as bk
 import numpy as np
 from bokeh.models import HoverTool as hov
 import pandas as pd
-from bokeh.charts import Scatter
-from collections import OrderedDict
+import pdb
 
 class Display_Map():
 	"""
@@ -22,45 +21,30 @@ class Display_Map():
 		"""
 		Initializes map image, borders, countries
 		"""
-		#for now, data is not related to geography
-		#stats = pd.read_csv('data/happiness_UScentric.csv')
-		#self.states = stats['What state or province do you live in, if applicable?']
-		#self.year = stats['Do you love and appreciate yourself?']
-		#self.safety = stats['Are your surroundings physically safe?']
-		#df = stats[["Do you love and appreciate yourself?", "Are your surroundings physically safe?", "What state or province do you live in, if applicable?"]]
-		#g = df.groupby('What state or province do you live in, if applicable?')
-		#self.pdict = OrderedDict()
-
-		#for i in g.groups.keys():
-		#    labels = g.get_group(i).columns
-		#    xname = labels[0]
-		#    yname = labels[1]
-		#    x = getattr(g.get_group(i), xname)
-		#    y = getattr(g.get_group(i), yname)
-		#    pdict[i] = zip(x, y)
-
-		# any of the following commented are valid Scatter inputs
-		#xyvalues = pdict
-		#xyvalues = pd.DataFrame(xyvalues)
-		#xyvalues = xyvalues.values()
-		#xyvalues = np.array(xyvalues.values())
-
-		#self.juvRate=[]
-		#for rate in stats['Rate per 100,000']:
-		#	if not np.isnan(rate):
-		#		self.juvRate.extend(int(rate))
-		
-		#TOOLS="resize,crosshair,pan,wheel_zoom,box_zoom,reset,previewsave"
-		#scatter = Scatter(
-		#    self.pdict, filename="state_happiness.html", tools=TOOLS, ylabel='Physical Safety'
-		#)
-		#scatter = Scatter(g, filename="state_happiness.html", title="State Happiness GroupBy")
-		#scatter.show()
-
-
+		# Read data from CSV file
 		df = pd.read_csv('data/GDP_per_state.csv', names = ['State', 'GDP'])
 		self.state_GDP = dict(zip(df.State, df.GDP))
 
+		stats = pd.read_csv('data/happiness_UScentric.csv')
+		self.states = stats['What state or province do you live in, if applicable?']
+		self.happy = stats['Do you love and appreciate yourself?']
+		self.safety = stats['Are your surroundings physically safe?']
+
+		self.state_hap = {}
+		self.state_safe = {}
+		# average happiness per state
+		for i in range(len(self.states)):
+			tryState = self.states[i]
+			if tryState in self.state_hap: #then they should also be in self.state_safe
+				self.state_hap[tryState].append(self.happy[i])
+				self.state_safe[tryState].append(self.safety[i])
+			#elif type(tryState) is 'str': # filter out nan types
+			else:
+				self.state_hap[tryState]=[self.happy[i]]
+				self.state_safe[tryState]=[self.safety[i]]
+
+		self.avgHap= [(i,float(sum(v))/len(v)) for i,v in self.state_hap.items()]
+		self.avgSafe= [(i,float(sum(v))/len(v)) for i,v in self.state_safe.items()]
 
 	def lookup_country(self,hover_pos):
 		"""Given position, finds Country object
@@ -78,23 +62,15 @@ class Display_Map():
 		"""
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map") #creates new Bokeh plot
-		#fig.circle(#self.gender, self.year,
-         #size=(self.juvRate), # px
+		fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
+		#fig.circle(
          #xs, ys,
          #size =2,
          #fill_alpha=0.5,
          #fill_color="steelblue",
          #line_alpha=0.8,
          #line_color="crimson")
-		#fig.circle(xs,ys)
-
-		#fig.line(xs, ys, line_width=2)
-
-		#TOOLS="resize,crosshair,pan,wheel_zoom,box_zoom,reset,previewsave"
-		#scatter = Scatter(
-		#    self.state_GDP, filename="state_happiness.html", tools=TOOLS, ylabel='State GDP'
-		#)
-		#scatter.show()
+		
 
 		bk.save(obj=fig)
 		bk.show(fig)

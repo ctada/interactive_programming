@@ -30,6 +30,11 @@ class Display_Map():
 		#	if not np.isnan(rate):
 		#		self.juvRate.extend(int(rate))
 
+
+		df = pd.read_csv('GDP_per_state.csv', names = ['State', 'GDP'])
+		state_GDP = dict(zip(df.State, df.GDP))
+
+
 	def lookup_country(self,hover_pos):
 		"""Given position, finds Country object
 			returns: country (Country object)

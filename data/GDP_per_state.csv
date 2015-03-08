@@ -1,59 +1,51 @@
-Per capita real GDP by state (chained 2009 dollars),,
-Levels ,,
-Bureau of Economic Analysis ,,
-All industry total,,
-Fips,Area,2013
-1000,Alabama,37389
-2000,Alaska,70113
-4000,Arizona,39526
-5000,Arkansas,39111
-6000,California,53497
-8000,Colorado,51956
-9000,Connecticut,65070
-10000,Delaware,62683
-11000,District of Columbia,163145
-12000,Florida,38384
-13000,Georgia,42494
-15000,Hawaii,49934
-16000,Idaho,35375
-17000,Illinois,52119
-18000,Indiana,44775
-19000,Iowa,48703
-20000,Kansas,45665
-21000,Kentucky,38830
-22000,Louisiana,47997
-23000,Maine,38517
-24000,Maryland,54351
-25000,Massachusetts,62866
-26000,Michigan,41252
-27000,Minnesota,53340
-28000,Mississippi,32421
-29000,Missouri,42708
-30000,Montana,39251
-31000,Nebraska,52582
-32000,Nevada,44407
-33000,New Hampshire,48447
-34000,New Jersey,57203
-35000,New Mexico,40431
-36000,New York,62420
-37000,North Carolina,44646
-38000,North Dakota,68804
-39000,Ohio,45476
-40000,Oklahoma,42670
-41000,Oregon,53750
-42000,Pennsylvania,47274
-44000,Rhode Island,47515
-45000,South Carolina,36059
-46000,South Dakota,48696
-47000,Tennessee,41503
-48000,Texas,52465
-49000,Utah,45165
-50000,Vermont,44241
-51000,Virginia,51623
-53000,Washington,54654
-54000,West Virginia,36963
-55000,Wisconsin,45993
-56000,Wyoming,67857
-Legend / Footnotes:,,
-Note-- NAICS Industry detail is based on the 2007 North American Industry Classification System (NAICS).,,
-"Last updated: June 11, 2014 - advance statisticss for 2013 and revised statistics for 1997-2012.",,
+Alabama,37389
+Alaska,70113
+Arizona,39526
+Arkansas,39111
+California,53497
+Colorado,51956
+Connecticut,65070
+Delaware,62683
+District of Columbia,163145
+Florida,38384
+Georgia,42494
+Hawaii,49934
+Idaho,35375
+Illinois,52119
+Indiana,44775
+Iowa,48703
+Kansas,45665
+Kentucky,38830
+Louisiana,47997
+Maine,38517
+Maryland,54351
+Massachusetts,62866
+Michigan,41252
+Minnesota,53340
+Mississippi,32421
+Missouri,42708
+Montana,39251
+Nebraska,52582
+Nevada,44407
+New Hampshire,48447
+New Jersey,57203
+New Mexico,40431
+New York,62420
+North Carolina,44646
+North Dakota,68804
+Ohio,45476
+Oklahoma,42670
+Oregon,53750
+Pennsylvania,47274
+Rhode Island,47515
+South Carolina,36059
+South Dakota,48696
+Tennessee,41503
+Texas,52465
+Utah,45165
+Vermont,44241
+Virginia,51623
+Washington,54654
+West Virginia,36963
+Wisconsin,45993
+Wyoming,67857

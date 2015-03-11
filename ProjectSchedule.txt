@@ -20,6 +20,8 @@ Sunday:
 
 Monday:
 	[] Polish
+		Worked on interaction with map and data by moving state boundary 
+		data to global variable
 	[] Start outline
 
 Tuesday:

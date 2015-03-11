@@ -23,6 +23,7 @@ class Display_Map():
 		"""
 		Initializes map image, borders, countries
 		"""
+
 		# US Geography data processing for map generation
 		US_states = open("data/US Regions State Boundaries_processed.csv")
 		nan = float('NaN')
@@ -100,9 +101,11 @@ class Display_Map():
 
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
+
 		fig.patches (self.state_xs, self.state_ys,
 			fill_color = state_colors, fill_alpha = 0.7, 
 			line_color = "black", line_width = 0.5)
+
 		# fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
 		#fig.circle(
          #xs, ys,
@@ -117,6 +120,7 @@ class Display_Map():
 		hover.tooltips = [("(x,y)", "($x, $y)")]
 
 		# show(fig)
+
 
 		bk.save(obj=fig)
 		bk.show(fig)
@@ -158,3 +162,4 @@ if __name__ == '__main__':
 	vis = Display_Map() # pass in arguments
 	#mouse = Interactive() 
 	vis.run_display()
+

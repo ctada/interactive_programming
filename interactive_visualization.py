@@ -7,9 +7,10 @@ We aim to create an interactive map that displays each countries' happiness rati
 """
 import bokeh.plotting as bk
 import numpy as np
-from bokeh.models import HoverTool as hov
+from bokeh.models import HoverTool
 import pandas as pd
 import pdb
+from collections import OrderedDict
 
 class Display_Map():
 	"""
@@ -62,9 +63,25 @@ class Display_Map():
 		"""
 		TOOLS = "pan, wheel_zoom, box_zoom, reset, hover"
 
-		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
+		bk.output_file("Map_bk.html", title="State Wellness Visualization")  # save plot as html
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
-		fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
+		#fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
+		
+		# create list of state GDP in same order as happiness/safety lists
+		gdpOrder=[]
+		for state in zip(*self.avgHap)[0]:
+				if state in self.state_GDP: # filters out non-US responses
+					print self.state_GDP[state]/1000000.0
+					gdpOrder.append(self.state_GDP[state]/1000000.0) #integer division to get plotted size down, while maintaing int type
+
+		fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], radius= gdpOrder)# zip also splits dictionary into list of keys and list of values
+		fig.text(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1],
+    		text=zip(*self.avgHap)[0],text_color="#333333",
+    		text_align="center", text_font_size="10pt")
+
+		fig.xaxis.axis_label="Average Reported Happiness (1-5)"
+		fig.yaxis.axis_label="Average Sense of Safety (1-5)"
+
 		#fig.circle(
          #xs, ys,
          #size =2,
@@ -72,7 +89,10 @@ class Display_Map():
          #fill_color="steelblue",
          #line_alpha=0.8,
          #line_color="crimson")
-		
+		hover = fig.select(dict(type = HoverTool))
+		# hover.snap_to_data = False
+		hover.tooltips = OrderedDict([("(x,y)", "(@x, @y)"), ("GDP", "@radius*1000000")])
+
 
 		bk.save(obj=fig)
 		bk.show(fig)
@@ -95,16 +115,18 @@ class Country():
 		pass
 
 class Interactive():
-	def __init__(self):
+	def __init__(self, fig):
 		"""
 		Initializes monitoring of user input
 		"""
+		print 'in Interactive'
 		hover = fig.select(dict(type = HoverTool))
 		# hover.snap_to_data = False
-		hover.tooltips = [("(x,y)", "($x, $y)")]
+		hover.tooltips = OrderedDict([("(x,y)", "($x, $y)"), ("size", "@size")])
 
+		
 		show(fig)
-
+		
 	def get_mouse_position(self):
 		"""
 		returns mouse position in relation to map image (translate from screen position)
@@ -112,5 +134,7 @@ class Interactive():
 		pass
 if __name__ == '__main__':
 	vis = Display_Map() # pass in arguments
-	#mouse = Interactive() 
 	vis.run_display()
+	#f = vis.get_fig()
+	#mouse = Interactive(f) 
+	

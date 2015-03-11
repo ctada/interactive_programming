@@ -24,9 +24,49 @@ class Display_Map():
 		Initializes map image, borders, countries
 		"""
 		# US Geography data processing for map generation
-		US_states = open("data/US Regions State Boundaries_processed.csv")
+		US_states = open("US Regions State Boundaries.csv")
 		nan = float('NaN')
 
+		print type (self.state_boundaries)
+
+		print self.state_boundaries
+
+		# boundary_data = self.state_boundaries
+		# print boundary_data[1]
+
+		# self.state_xs = [boundary_data[code]['lons'] for code in boundary_data]
+		# self.state_ys = [boundary_data[code]['lats'] for code in boundary_data]
+
+		# Read data from CSV file
+		df = pd.read_csv('GDP_per_state.csv', names = ['State', 'GDP'])
+		self.state_GDP = dict(zip(df.State, df.GDP))
+
+		stats = pd.read_csv('happiness_UScentric.csv')
+		self.states = stats['What state or province do you live in, if applicable?']
+		self.happy = stats['Do you love and appreciate yourself?']
+		self.safety = stats['Are your surroundings physically safe?']
+
+		self.state_hap = {}
+		self.state_safe = {}
+		# average happiness per state
+		for i in range(len(self.states)):
+			tryState = self.states[i]
+			if tryState in self.state_hap: #then they should also be in self.state_safe
+				self.state_hap[tryState].append(self.happy[i])
+				self.state_safe[tryState].append(self.safety[i])
+			#elif type(tryState) is 'str': # filter out nan types
+			else:
+				self.state_hap[tryState]=[self.happy[i]]
+				self.state_safe[tryState]=[self.safety[i]]
+
+		self.avgHap= [(i,float(sum(v))/len(v)) for i,v in self.state_hap.items()]
+		self.avgSafe= [(i,float(sum(v))/len(v)) for i,v in self.state_safe.items()]
+
+
+	def state_boundaries(self):
+		"""
+		Processes data for map of all the states
+		"""
 		boundary_data = {}
 		with US_states as f:
 		    next(f)
@@ -51,33 +91,7 @@ class Display_Map():
 		            'lats' : lats,
 		            'lons' : lons,
 		        }#Code above is based off of Bokeh Texas example code: US_counties.py
-		self.state_xs = [boundary_data[code]['lons'] for code in boundary_data]
-		self.state_ys = [boundary_data[code]['lats'] for code in boundary_data]
-
-		# Read data from CSV file
-		df = pd.read_csv('data/GDP_per_state.csv', names = ['State', 'GDP'])
-		self.state_GDP = dict(zip(df.State, df.GDP))
-
-		stats = pd.read_csv('data/happiness_UScentric.csv')
-		self.states = stats['What state or province do you live in, if applicable?']
-		self.happy = stats['Do you love and appreciate yourself?']
-		self.safety = stats['Are your surroundings physically safe?']
-
-		self.state_hap = {}
-		self.state_safe = {}
-		# average happiness per state
-		for i in range(len(self.states)):
-			tryState = self.states[i]
-			if tryState in self.state_hap: #then they should also be in self.state_safe
-				self.state_hap[tryState].append(self.happy[i])
-				self.state_safe[tryState].append(self.safety[i])
-			#elif type(tryState) is 'str': # filter out nan types
-			else:
-				self.state_hap[tryState]=[self.happy[i]]
-				self.state_safe[tryState]=[self.safety[i]]
-
-		self.avgHap= [(i,float(sum(v))/len(v)) for i,v in self.state_hap.items()]
-		self.avgSafe= [(i,float(sum(v))/len(v)) for i,v in self.state_safe.items()]
+		return boundary_data
 
 	def lookup_country(self,hover_pos):
 		"""Given position, finds Country object
@@ -98,35 +112,38 @@ class Display_Map():
 
 		TOOLS = "pan, wheel_zoom, box_zoom, reset, hover"
 
-		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
-		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
-		fig.patches (self.state_xs, self.state_ys,
-			fill_color = state_colors, fill_alpha = 0.7, 
-			line_color = "black", line_width = 0.5)
-		# fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
-		#fig.circle(
-         #xs, ys,
-         #size =2,
-         #fill_alpha=0.5,
-         #fill_color="steelblue",
-         #line_alpha=0.8,
-         #line_color="crimson")
+		# bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
+		# fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
+		# fig.patches (self.state_xs, self.state_ys,
+		# 	fill_color = state_colors, fill_alpha = 0.7, 
+		# 	line_color = "black", line_width = 0.5)
+		# # fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
+		# #fig.circle(
+  #        #xs, ys,
+  #        #size =2,
+  #        #fill_alpha=0.5,
+  #        #fill_color="steelblue",
+  #        #line_alpha=0.8,
+  #        #line_color="crimson")
 		
-		hover = fig.select(dict(type = HoverTool))
-		# hover.snap_to_data = False
-		hover.tooltips = [("(x,y)", "($x, $y)")]
+		# hover = fig.select(dict(type = HoverTool))
+		# # hover.snap_to_data = False
+		# hover.tooltips = ([("(x,y)", "($x, $y)")])
+		# 	#("index:", boundary_data[index]),
+		# # show(fig)
 
-		# show(fig)
+		# bk.save(obj=fig)
+		# bk.show(fig)
 
-		bk.save(obj=fig)
-		bk.show(fig)
-
-class Country():
+class state():
 	def __init__(self,name, borders, happiness, GDP):
 		"""
 		Creates Country object with name, borders, mean happiness level, and GDP of a certain year
 		"""
 		pass
+	def get_state(self, lat, long):
+		pass
+
 	def get_happiness(self):
 		"""
 		returns country's mean happiness level

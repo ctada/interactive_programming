@@ -51,8 +51,8 @@ class Display_Map():
 				self.state_hap[tryState]=[self.happy[i]]
 				self.state_safe[tryState]=[self.safety[i]]
 
-		self.avgHap= [(i,float(sum(v))/len(v)) for i,v in self.state_hap.items()]
-		self.avgSafe= [(i,float(sum(v))/len(v)) for i,v in self.state_safe.items()]
+		self.avgHap= dict([(i,float(sum(v))/len(v)) for i,v in self.state_hap.items()])
+		self.avgSafe= dict([(i,float(sum(v))/len(v)) for i,v in self.state_safe.items()])
 
 
 	def lookup_country(self,hover_pos):
@@ -78,24 +78,33 @@ class Display_Map():
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
 		fig.patches (self.state_xs, self.state_ys,
 			fill_color = state_colors, fill_alpha = 0.7, 
+			source = bk.ColumnDataSource(data = {
+				    'region' : [state_boundaries.data[code]['region'] for code in state_boundaries.data],
+				    'state' : [state_boundaries.data[code]['state'] for code in state_boundaries.data], 
+				    'happiness': [self.avgHap[code] for code in self.avgHap],
+				}),
 			line_color = "black", line_width = 0.5)
-		# fig.circle(x=zip(*self.avgHap)[1], y=zip(*self.avgSafe)[1], size= np.random.random(size=len(zip(*self.avgHap)[0])) * 15)# zip also splits dictionary into list of keys and list of values
-		#fig.circle(
-         #xs, ys,
-         #size =2,
-         #fill_alpha=0.5,
-         #fill_color="steelblue",
-         #line_alpha=0.8,
-         #line_color="crimson")
+		# print dict(self.avgHap)
 		
 		hover = fig.select(dict(type = HoverTool))
 		# hover.snap_to_data = False
-		hover.tooltips = ([('index', 'index'), ("(x,y)", "($x, $y)")])
+		hover.tooltips = ([('State:', '@state'), ("(x,y)", "($x, $y)")], [('Happiness', '@happiness')])
+
+		print [self.avgHap[code] for code in self.avgHap]
+
 			#("index:", boundary_data[index]),
 		# show(fig)
+		# print state_boundaries.data
 
 		bk.save(obj=fig)
 		bk.show(fig)
+
+      #   data[state] = {
+        #     'region' : region,
+        #     'state' : state,
+        #     'lats' : lats,
+        #     'lons' : lons,
+        # }#Code abov
 
 class state():
 	def __init__(self,name, borders, happiness, GDP):

@@ -31,3 +31,4 @@ with US_states as f:
             'lons' : lons,
         }#Code above is based off of Bokeh Texas example code: US_counties.py
 # return data
+print data

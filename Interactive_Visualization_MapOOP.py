@@ -5,7 +5,7 @@ Interactive Visualization Project
 
 We aim to create an interactive map that displays each countries' happiness rating and GDP
 """
-import state_boundaries
+import state_boundaries # geographical data
 import xml.etree.cElementTree as et
 import bokeh.plotting as bk
 import numpy as np
@@ -24,10 +24,7 @@ class Display_Map(object):
 		"""
 		Initializes map image, borders, countries
 		"""
-		# pull in geographical data
-		self.state_xs = [state_boundaries.data[code]['lons'] for code in state_boundaries.data]
-		self.state_ys = [state_boundaries.data[code]['lats'] for code in state_boundaries.data]
-
+		
 		# Read happiness and safety data from CSV file
 		df = pd.read_csv('data/GDP_per_state.csv', names = ['State', 'GDP'])
 		self.state_GDP = dict(zip(df.State, df.GDP))
@@ -56,8 +53,7 @@ class Display_Map(object):
 		Maintains display/ interaction experience
 		"""
 		colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
-		state_colors = ["#4C0B5F"] # color of state when mouse is hovering over it
-
+		state_colors = ["#4C0B5F"] # color of state is exists
 		TOOLS = "pan, wheel_zoom, box_zoom, reset, hover"
 
 		# Pull info from each State into attribute-specific lists for use in bokeh

@@ -107,6 +107,8 @@ class Display_Map(object):
 		bk.show(fig)
 
 class State():
+	"""State objects store information specific to each state"""
+	
 	def __init__(self,name,happiness, safety, music, outdoors, smile, GDP, borderX, borderY):
 		"""
 		Creates State object with name, mean happiness level, and contribution to GDP of a certain year
@@ -120,11 +122,6 @@ class State():
 		self.GDP = GDP
 		self.borderX = borderX
 		self.borderY = borderY
-
-
-		# data_music = stats['How often do you listen to music you enjoy?']
-		# data_outdoors = stats['How often are you outdoors?']
-		# data_smile = stats['How often do you smile every day?']
 
 	# def __str__(self):
 	# 	return self.name + str(self.happiness) + "," + str(self.safety) + "," + str(self.GDP) + "," + str(self.borderX) + "," + str(self.borderY)
@@ -152,4 +149,5 @@ class State():
 if __name__ == '__main__':
 	vis = Display_Map() 
 	vis.run_display()
+
 

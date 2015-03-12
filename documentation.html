@@ -1,0 +1,85 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module Interactive_Visualization_Map_Project</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>Interactive_Visualization_Map_Project</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/celine/Github/interactive_programming/Interactive_Visualization_Map_Project.py">/home/celine/Github/interactive_programming/Interactive_Visualization_Map_Project.py</a></font></td></tr></table>
+    <p><tt>Kelly&nbsp;Brennan&nbsp;and&nbsp;Celine&nbsp;Ta<br>
+Software&nbsp;Design&nbsp;Spring&nbsp;2015<br>
+Interactive&nbsp;Visualization&nbsp;Project<br>
+&nbsp;<br>
+We&nbsp;aim&nbsp;to&nbsp;create&nbsp;an&nbsp;interactive&nbsp;map&nbsp;that&nbsp;displays&nbsp;each&nbsp;countries'&nbsp;happiness&nbsp;rating&nbsp;and&nbsp;GDP</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="bokeh.plotting.html">bokeh.plotting</a><br>
+<a href="xml.etree.cElementTree.html">xml.etree.cElementTree</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="pdb.html">pdb</a><br>
+<a href="state_boundaries.html">state_boundaries</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="Interactive_Visualization_Map_Project.html#State">State</a>
+</font></dt><dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="Interactive_Visualization_Map_Project.html#Display_Map">Display_Map</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Display_Map">class <strong>Display_Map</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Takes&nbsp;in&nbsp;map&nbsp;image,&nbsp;array&nbsp;of&nbsp;defining&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;<a href="#State">State</a>,&nbsp;and&nbsp;list&nbsp;of&nbsp;countries.&nbsp;Upon&nbsp;a&nbsp;mouse&nbsp;action,&nbsp;<a href="#Display_Map">Display_Map</a>&nbsp;will<br>
+look&nbsp;up&nbsp;location&nbsp;of&nbsp;mouse&nbsp;action&nbsp;in&nbsp;relation&nbsp;to&nbsp;map&nbsp;and&nbsp;update&nbsp;display&nbsp;accordingly.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Display_Map-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Initializes&nbsp;map&nbsp;image,&nbsp;borders,&nbsp;countries</tt></dd></dl>
+
+<dl><dt><a name="Display_Map-run_display"><strong>run_display</strong></a>(self)</dt><dd><tt>Maintains&nbsp;display/&nbsp;interaction&nbsp;experience</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="State">class <strong>State</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="State-__init__"><strong>__init__</strong></a>(self, name, happiness, safety, music, outdoors, smile, GDP, borderX, borderY)</dt><dd><tt>Creates&nbsp;<a href="#State">State</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;name,&nbsp;mean&nbsp;happiness&nbsp;level,&nbsp;and&nbsp;contribution&nbsp;to&nbsp;GDP&nbsp;of&nbsp;a&nbsp;certain&nbsp;year</tt></dd></dl>
+
+<dl><dt><a name="State-add_happiness_safety"><strong>add_happiness_safety</strong></a>(self, hapVal, safeVal, musVal, outVal, smileVal)</dt><dd><tt>No&nbsp;return.&nbsp;Records&nbsp;happiness&nbsp;and&nbsp;safety&nbsp;rating&nbsp;to&nbsp;<a href="#State">State</a>&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="State-average_data"><strong>average_data</strong></a>(self)</dt><dd><tt>No&nbsp;return.&nbsp;Averages&nbsp;a&nbsp;state's&nbsp;happiness,&nbsp;safety</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

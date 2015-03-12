@@ -5,7 +5,7 @@ Interactive Visualization Project
 
 We aim to create an interactive map that displays each countries' happiness rating and GDP
 """
-import csv
+import state_boundaries
 import xml.etree.cElementTree as et
 import bokeh.plotting as bk
 import numpy as np
@@ -19,42 +19,15 @@ class Display_Map(object):
 	Takes in map image, array of defining coordinates for each State, and list of countries. Upon a mouse action, Display_Map will
 	look up location of mouse action in relation to map and update display accordingly.
 	"""
-	#def __init__(self,image, borders, list_countries):
+
 	def __init__(self):
 		"""
 		Initializes map image, borders, countries
 		"""
 
-		# US Geography data processing for map generation
-		US_states = open("data/US Regions State Boundaries_processed.csv")
-		nan = float('NaN')
 
-		boundary_data = {}
-		with US_states as f:
-		    next(f)
-		    reader = csv.reader(f, delimiter=',', quotechar='"')
-		    for row in reader:
-		    	region, state, state_id, geometry, color = row
-		    	xml = et.fromstring(geometry)
-		        lats = []
-		        lons = []
-		        for i, poly in enumerate(xml.findall('.//outerBoundaryIs/LinearRing/coordinates')):
-		            if i > 0:
-		                lats.append(nan)
-		                lons.append(nan)
-		            coords = (c.split(',')[:2] for c in poly.text.split())
-		            lat, lon = list(zip(*[(float(lat), float(lon)) for lon, lat in
-		                coords]))
-		            lats.extend(lat)
-		            lons.extend(lon)
-		        boundary_data[state] = {
-		            'region' : region,
-		            'state' : state,
-		            'lats' : lats,
-		            'lons' : lons,
-		        }#Code above is based off of Bokeh Texas example code: US_counties.py
-		self.state_xs = [boundary_data[code]['lons'] for code in boundary_data]
-		self.state_ys = [boundary_data[code]['lats'] for code in boundary_data]
+		self.state_xs = [state_boundaries.data[code]['lons'] for code in state_boundaries.data]
+		self.state_ys = [state_boundaries.data[code]['lats'] for code in state_boundaries.data]
 
 		# Read data from CSV file
 		df = pd.read_csv('data/GDP_per_state.csv', names = ['State', 'GDP'])
@@ -65,22 +38,24 @@ class Display_Map(object):
 		data_happy = stats['Do you love and appreciate yourself?']
 		data_safety = stats['Are your surroundings physically safe?']
 
-		self.states = {} # create master dictionary of State objects
-		
+		# self.states = dict(zip(self.state_GDP.keys(), [State(self.state_GDP.keys()[i],0,0,0,0,0) for i in range(len(self.state_GDP.keys()))])) # create master dictionary of State objects
+		self.states = dict(zip(state_boundaries.data.keys(), [State(state_boundaries.data.keys()[i],0,0, self.state_GDP[name], state_boundaries.data[name]['lons'], state_boundaries.data[name]['lats']) for i,name in enumerate(state_boundaries.data.keys())]))
 		# fill in self.states with State objects with their own happiness and safety ratings
 		for i in range(len(data_states)):
 			tryState =	data_states[i]
-			if tryState in self.state_GDP and tryState in boundary_data.keys(): #ensures territory is in US and we have info for it
-				if tryState in self.states: #then they should also be in self.state_safe
-					self.states[tryState].add_happiness_safety(data_happy[i], data_safety[i])				
-				else:
-					boundariesX = boundary_data[tryState]['lons']
-					boundariesY = boundary_data[tryState]['lats']
-					self.states[tryState] = State(tryState, data_happy[i], data_safety[i], self.state_GDP[tryState], boundariesX, boundariesY)
-
+			if tryState in self.states and tryState in state_boundaries.data:
+				self.states[tryState].add_happiness_safety(data_happy[i], data_safety[i])			
+		# print self.states
 		# averages Happiness and Safety ratings for each State on master dictionary
-		for k in self.states.keys():
-			self.states[k].average_data()
+		#for k in self.states.keys():
+		for v in self.states.values():
+			if len(v.happiness) >= 2: #checking we got at least one actual entry
+				v.average_data()
+
+		# print self.states.values()
+		# for i in self.states.values():
+		# 	print i
+		# print getattr(self.states.values(), 'get_GDP')
 
 
 	def run_display(self):
@@ -97,36 +72,48 @@ class Display_Map(object):
 		happiness = []
 		safety = []
 		grossDP = []
-		state_xs = []
-		state_ys = []
+		xs = []
+		ys = []
 
-		for elem in self.states.keys():
-			state_obj = self.states[elem]
-			names.append(state_obj.get_name())
-			happiness.append(state_obj.get_happiness())
-			safety.append(state_obj.get_safety())
-			grossDP.append(state_obj.get_GDP)
-			state_xs.append(state_obj.getX())
-			state_ys.append(state_obj.getY())
+		# print len(self.states.keys())
+		for st in self.states.values():
+			if type(st) is not str:
+				names.append(st.name)
+				happiness.append(st.happiness)
+				safety.append(st.safety)
+				grossDP.append(st.GDP)
+				xs.append(st.borderX)
+				ys.append(st.borderY)
 
 		# TODO: IS THERE ANY WAY TO GET OBJECT INFO INTO PATCHES OR TOOLTIPS?
-		source = bk.ColumnDataSource(
-	    	data=dict(
-		        name=names,
-		        happiness=happiness,
-		        safety=safety,
-		        GDP=grossDP,
-		        state_xs = state_xs,
-		        state_ys = state_ys
-   			 )
-		)
+		# source = bk.ColumnDataSource(
+	 #    	data=dict(
+		#         name=names,
+		#         happiness=happiness,
+		#         safety=safety,
+		#         GDP=grossDP,
+		#         state_xs = state_xs,
+		#         state_ys = state_ys
+  #  			 )
+		# )
+		# print len(names)
+		print names
 
 		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
 		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
 
-		fig.patches (state_xs, state_ys,
+		fig.patches (xs, ys,
 			fill_color = state_colors, fill_alpha = 0.7, 
+			source = bk.ColumnDataSource(data = {
+				    'state':names,
+				    'happiness': happiness, 
+				    'GDP': grossDP
+				}),
 			line_color = "black", line_width = 0.5)
+
+		# fig.patches (state_xs, state_ys,
+		# 	fill_color = state_colors, fill_alpha = 0.7, 
+		# 	line_color = "black", line_width = 0.5)
 		#pdb.set_trace()
 
 		#fig.text(self.state_xs, self.state_ys, # can't recognize coordinates as value on chart
@@ -135,7 +122,10 @@ class Display_Map(object):
 
 		hover = fig.select(dict(type = hov))
 		# hover.snap_to_data = False
-		hover.tooltips = OrderedDict([("State", "@names"), ("GDP", "@GDP")])
+		hover.tooltips = OrderedDict([("State", "@state"), ("Happiness", "@happiness"), ("GDP", "@GDP")])#, ("GDP", "@GDP")])
+				# hover.snap_to_data = False
+
+		# hover.tooltips = ([('State:', '@state'), ("(x,y)", "($x, $y)")], [('Happiness', '@happiness')])
 
 		bk.save(obj=fig)
 		bk.show(fig)
@@ -152,39 +142,8 @@ class State():
 		self.borderX = borderX
 		self.borderY = borderY
 
-	def get_name(self):
-		"""returns name"""
-		return self.name
-
-	def get_happiness(self):
-		"""
-		returns State's mean happiness level
-		"""
-		return self.happiness
-
-	def get_GDP(self):
-		"""
-		returns State's contribution to GDP
-		"""
-		return self.GDP
-
-	def get_safety(self):
-		"""
-		returns safety level
-		"""
-		return self.safety
-
-	def getX(self):
-		"""
-		returns x-position perimeter coordinates
-		"""
-		return self.borderX
-
-	def getY(self):
-		"""
-		returns y-position perimeter coordinates
-		"""
-		return self.borderY
+	def __str__(self):
+		return self.name + str(self.happiness) + "," + str(self.safety) + "," + str(self.GDP) + str(self.borderX) + str(self.borderY)
 
 	def add_happiness_safety(self, hapVal, safeVal):
 		"""
@@ -197,8 +156,8 @@ class State():
 		""" 
 		No return. Averages a state's happiness, safety
 		"""
-		self.happiness = float(sum(self.happiness))/len(self.happiness)
-		self.safety = float(sum(self.safety))/len(self.safety)
+		self.happiness = float(sum(self.happiness))/(len(self.happiness)-1) # subtract one from denominator to get remove influence of initial State object set to 0 (added 0 happiness, safety to State's record)
+		self.safety = float(sum(self.safety))/(len(self.safety)-1)
 
 
 class Interactive():

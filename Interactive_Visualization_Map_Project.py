@@ -38,13 +38,13 @@ class Display_Map(object):
 		data_smile = stats['How often do you smile every day?']
 
 		# Create dictionary of states that we want to display on map, with state name (string) as a key and State object as the value
-		self.states = dict(zip(state_boundaries.data.keys(), [State(state_boundaries.data.keys()[i],0,0, self.state_GDP[name], state_boundaries.data[name]['lons'], state_boundaries.data[name]['lats']) for i,name in enumerate(state_boundaries.data.keys())]))
+		self.states = dict(zip(state_boundaries.data.keys(), [State(state_boundaries.data.keys()[i],0,0,0,0,0, self.state_GDP[name], state_boundaries.data[name]['lons'], state_boundaries.data[name]['lats']) for i,name in enumerate(state_boundaries.data.keys())]))
 		
 		# Add happiness and safety ratings to their corresponding States
 		for i in range(len(data_states)):
 			tryState =	data_states[i]
 			if tryState in self.states and tryState in state_boundaries.data:
-				self.states[tryState].add_happiness_safety(data_happy[i], data_safety[i])			
+				self.states[tryState].add_happiness_safety(data_happy[i], data_safety[i], data_music[i], data_outdoors[i], data_smile[i])			
 
 		# averages Happiness and Safety ratings for each State on master dictionary
 		for v in self.states.values():
@@ -64,6 +64,9 @@ class Display_Map(object):
 		happiness = []
 		safety = []
 		grossDP = []
+		music = []
+		outdoors = []
+		smile = []
 		xs = []
 		ys = []
 
@@ -73,11 +76,14 @@ class Display_Map(object):
 				happiness.append(st.happiness)
 				safety.append(st.safety)
 				grossDP.append(st.GDP)
+				music.append(st.music)
+				outdoors.append(st.outdoors)
+				smile.append(st.smile)
 				xs.append(st.borderX)
 				ys.append(st.borderY)
 
-		bk.output_file("Map_bk.html", title="Hello World!")  # save plot as html
-		fig = bk.figure(plot_width = 600, plot_height= 600, title = "Map", tools = TOOLS) #creates new Bokeh plot
+		bk.output_file("Map_bk_OutdoorSafety.html", title="Hello World!")  # save plot as html
+		fig = bk.figure(plot_width = 800, plot_height= 600, title = "Outdoor Activity and Safety per State", tools = TOOLS) #creates new Bokeh plot
 
 		#display patches to match state shape, assigning state name, happiness, and GDP to each their respective patch
 		fig.patches (xs, ys,
@@ -85,38 +91,53 @@ class Display_Map(object):
 			source = bk.ColumnDataSource(data = {
 				    'state':names,
 				    'happiness': happiness, 
-				    'GDP': grossDP
+				    'GDP': grossDP,
+				    'safety': safety,
+				    'music':music,
+				    'outdoors': outdoors,
+				    'smiles': smile
 				}),
 			line_color = "black", line_width = 0.5)
 
 		hover = fig.select(dict(type = hov)) # turn on hovering
 		# hover.snap_to_data = False
-		hover.tooltips = OrderedDict([("State", "@state"), ("Happiness", "@happiness"), ("GDP", "@GDP")]) # Customize what is displayed in tooltips
+		hover.tooltips = OrderedDict([("State", "@state"), ("Spends Time Outdoors", "@music"), ("Safety", "@safety")]) # Customize what is displayed in tooltips
 		
 		bk.save(obj=fig) 
 		bk.show(fig)
 
 class State():
-	def __init__(self,name,happiness, safety, GDP, borderX, borderY):
+	def __init__(self,name,happiness, safety, music, outdoors, smile, GDP, borderX, borderY):
 		"""
 		Creates State object with name, mean happiness level, and contribution to GDP of a certain year
 		"""
 		self.name = name
 		self.happiness = [happiness] #create list with happiness as the first entry
 		self.safety = [safety] #create list with safety as the first entry
+		self.music = [music]
+		self.outdoors = [outdoors]
+		self.smile = [smile]
 		self.GDP = GDP
 		self.borderX = borderX
 		self.borderY = borderY
 
-	def __str__(self):
-		return self.name + str(self.happiness) + "," + str(self.safety) + "," + str(self.GDP) + "," + str(self.borderX) + "," + str(self.borderY)
 
-	def add_happiness_safety(self, hapVal, safeVal):
+		# data_music = stats['How often do you listen to music you enjoy?']
+		# data_outdoors = stats['How often are you outdoors?']
+		# data_smile = stats['How often do you smile every day?']
+
+	# def __str__(self):
+	# 	return self.name + str(self.happiness) + "," + str(self.safety) + "," + str(self.GDP) + "," + str(self.borderX) + "," + str(self.borderY)
+
+	def add_happiness_safety(self, hapVal, safeVal, musVal, outVal, smileVal):
 		"""
 		No return. Records happiness and safety rating to State object.
 		"""
 		self.happiness.append(hapVal)
 		self.safety.append(safeVal)
+		self.music.append(musVal)
+		self.outdoors.append(outVal)
+		self.smile.append(smileVal)
 
 	def average_data(self):
 		""" 
@@ -124,6 +145,9 @@ class State():
 		"""
 		self.happiness = float(sum(self.happiness))/(len(self.happiness)-1) # subtract one from denominator to get remove influence of initial State object set to 0 (added 0 happiness, safety to State's record)
 		self.safety = float(sum(self.safety))/(len(self.safety)-1)
+		self.music = float(sum(self.music))/(len(self.music)-1)
+		self.outdoors = float(sum(self.outdoors))/(len(self.outdoors)-1)
+		self.smile = float(sum(self.smile))/(len(self.smile)-1)
 
 if __name__ == '__main__':
 	vis = Display_Map() 
